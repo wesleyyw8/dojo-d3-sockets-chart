@@ -73,7 +73,7 @@ const app = angular.module('wesjs',['ngRoute']);
 /* harmony export (immutable) */ __webpack_exports__["app"] = app;
 
 
-app.config(['$routeProvider', function($routeProvider){
+app.config(['$routeProvider', ($routeProvider) => {
   $routeProvider.
     when('/home', {
       templateUrl: '../views/home.html',
@@ -109,11 +109,25 @@ module.exports = __webpack_require__(2);
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__config_config__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_data__ = __webpack_require__(3);
 
 
-__WEBPACK_IMPORTED_MODULE_0__config_config__["app"].controller('homeController', function() {
-  console.log('awd');
-});
+__WEBPACK_IMPORTED_MODULE_0__config_config__["app"].controller('homeController',
+['$scope', 'dataService', function ($scope, dataService) {
+  console.log(dataService.getPeople);
+
+}]);
+
+/***/ }),
+/* 3 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+const test = {
+  a: 3
+};
+/* unused harmony export test */
+
 
 /***/ })
 /******/ ]);

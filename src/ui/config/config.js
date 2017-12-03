@@ -1,6 +1,6 @@
 export const app = angular.module('wesjs',['ngRoute']);
 
-app.config(['$routeProvider', function($routeProvider){
+app.config(['$routeProvider', ($routeProvider) => {
   $routeProvider.
     when('/home', {
       templateUrl: '../views/home.html',
