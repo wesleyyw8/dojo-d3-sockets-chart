@@ -112,10 +112,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_data__ = __webpack_require__(3);
 
 
-__WEBPACK_IMPORTED_MODULE_0__config_config__["app"].controller('homeController',
-['$scope', 'dataService', function ($scope, dataService) {
-  console.log(dataService.getPeople);
+__WEBPACK_IMPORTED_MODULE_0__config_config__["app"].controller('homeController', ['$scope', function ($scope) {
+  const socket = new WebSocket('ws://localhost:3000');
+  socket.addEventListener('open', function (event) {
+    console.log('WebSocket connected');
+    //socket.send('Hello Server!');
+  });
+  socket.addEventListener('message', function (event) {
+    console.log('Message from server ', event.data);
+  });
 
+  $scope.generateData = () => {
+    socket.send('oi');
+  };
 }]);
 
 /***/ }),
