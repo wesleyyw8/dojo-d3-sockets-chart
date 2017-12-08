@@ -18,17 +18,16 @@ let arr = [];
 
 
 wss.on('connection', function(ws) {
-
     //connection is up, let's add a simple simple event
     ws.on('message', (message) => {
-
-        //log the received message and send it back to the client
       console.log('received: %s', message);
-
       arr.push(parseInt(Math.random()*10));
       ws.send(JSON.stringify(arr));
     });
 
+    ws.on('close', function () {
+      console.log('stopping client interval');
+    });
     //send immediatly a feedback to the incoming connection    
    ws.send('Hi there, I am a WebSocket server');
 });

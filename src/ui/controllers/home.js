@@ -1,16 +1,28 @@
 import { app } from './../config/config';
-import { test } from './../services/data';
-app.controller('homeController', ['$scope', function ($scope) {
-  const socket = new WebSocket('ws://localhost:3000');
-  socket.addEventListener('open', function (event) {
-    console.log('WebSocket connected');
-    //socket.send('Hello Server!');
-  });
-  socket.addEventListener('message', function (event) {
-    console.log('Message from server ', event.data);
-  });
+import Sockets from './../services/sockets';
+app.controller('homeController', ['$scope', '$timeout', function ($scope, $timeout) {
 
-  $scope.generateData = () => {
-    socket.send('oi');
-  };
+  const socketObj = new Sockets();
+  $timeout(() => {
+    socketObj.sendData();
+  }, 1000);
+  // const socket = new WebSocket('ws://localhost:3000');
+  // socket.addEventListener('open', function (event) {
+  //   console.log('WebSocket connected');
+  // });
+  // socket.addEventListener('message', function (event) {
+  //   console.log('Message from server ', event.data);
+  // });
+
+  // socket.addEventListener('close', function (event) {
+  //   console.log('WebSocket disconnected');
+  // });
+
+  // $scope.generateData = () => {
+  //   socket.send('oi');
+  // };
+
+  // $scope.closeWebSocketConnection = () => {
+  //   socket.close();
+  // }
 }]);

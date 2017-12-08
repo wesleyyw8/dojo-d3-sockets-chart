@@ -109,22 +109,34 @@ module.exports = __webpack_require__(2);
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__config_config__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_data__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_sockets__ = __webpack_require__(3);
 
 
-__WEBPACK_IMPORTED_MODULE_0__config_config__["app"].controller('homeController', ['$scope', function ($scope) {
-  const socket = new WebSocket('ws://localhost:3000');
-  socket.addEventListener('open', function (event) {
-    console.log('WebSocket connected');
-    //socket.send('Hello Server!');
-  });
-  socket.addEventListener('message', function (event) {
-    console.log('Message from server ', event.data);
-  });
+__WEBPACK_IMPORTED_MODULE_0__config_config__["app"].controller('homeController', ['$scope', '$timeout', function ($scope, $timeout) {
 
-  $scope.generateData = () => {
-    socket.send('oi');
-  };
+  const socketObj = new __WEBPACK_IMPORTED_MODULE_1__services_sockets__["a" /* default */]();
+  $timeout(() => {
+    socketObj.sendData();
+  }, 1000);
+  // const socket = new WebSocket('ws://localhost:3000');
+  // socket.addEventListener('open', function (event) {
+  //   console.log('WebSocket connected');
+  // });
+  // socket.addEventListener('message', function (event) {
+  //   console.log('Message from server ', event.data);
+  // });
+
+  // socket.addEventListener('close', function (event) {
+  //   console.log('WebSocket disconnected');
+  // });
+
+  // $scope.generateData = () => {
+  //   socket.send('oi');
+  // };
+
+  // $scope.closeWebSocketConnection = () => {
+  //   socket.close();
+  // }
 }]);
 
 /***/ }),
@@ -132,10 +144,28 @@ __WEBPACK_IMPORTED_MODULE_0__config_config__["app"].controller('homeController',
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-const test = {
-  a: 3
-};
-/* unused harmony export test */
+class Sockets { 
+  constructor() {
+    this.socket = new WebSocket('ws://localhost:3000');
+    this.socket.addEventListener('open', function (event) {
+      console.log('WebSocket connected');
+    });
+    this.socket.addEventListener('message', function (event) {
+      console.log('Message from server ', event.data);
+    });
+    this.socket.addEventListener('close', function (event) {
+      console.log('WebSocket disconnected');
+    });
+  }
+  sendData(){
+    new Promise
+    this.socket.send('oi');
+  }
+  closeWebSocketConnection(){
+    this.socket.close();
+  }
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = Sockets;
 
 
 /***/ })
