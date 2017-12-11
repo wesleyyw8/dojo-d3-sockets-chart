@@ -4,7 +4,8 @@ var webpack = require('webpack');
 module.exports = {
   entry: [
     './src/ui/config/config.js',
-    './src/ui/controllers/home.js'
+    './src/ui/controllers/home.js',
+    './src/ui/directives/chart/component.js'
   ],
   output: {
     path: path.resolve(__dirname, 'build'),

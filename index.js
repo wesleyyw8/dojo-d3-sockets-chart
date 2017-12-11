@@ -14,14 +14,27 @@ app.use('/', express.static(__dirname + '/src/ui'));
 app.use('/build', express.static(__dirname + '/build')); 
 app.use('/scripts', express.static(__dirname + '/node_modules'));
 
-let arr = [];
-
+let arr = [{
+    "x":0,"y":9
+  },{
+    "x":1,"y":6
+  },{
+    "x":7,"y":2
+  },{
+    "x":4,"y":9
+  },{
+    "x":3,"y":5
+  }];
 
 wss.on('connection', function(ws) {
     //connection is up, let's add a simple simple event
     ws.on('message', (message) => {
       console.log('received: %s', message);
-      arr.push(parseInt(Math.random()*10));
+      arr.push({
+        x: parseInt(Math.random()*10),
+        y: parseInt(Math.random()*10)
+      });
+     
       ws.send(JSON.stringify(arr));
     });
 
@@ -29,7 +42,7 @@ wss.on('connection', function(ws) {
       console.log('stopping client interval');
     });
     //send immediatly a feedback to the incoming connection    
-   ws.send('Hi there, I am a WebSocket server');
+   //ws.send('Hi there, I am a WebSocket server');
 });
 
 //start our server

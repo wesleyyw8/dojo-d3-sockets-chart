@@ -99,7 +99,8 @@ app.config(['$routeProvider', ($routeProvider) => {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(0);
-module.exports = __webpack_require__(2);
+__webpack_require__(2);
+module.exports = __webpack_require__(4);
 
 
 /***/ }),
@@ -114,29 +115,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 __WEBPACK_IMPORTED_MODULE_0__config_config__["app"].controller('homeController', ['$scope', '$timeout', function ($scope, $timeout) {
 
-  const socketObj = new __WEBPACK_IMPORTED_MODULE_1__services_sockets__["a" /* default */]();
-  $timeout(() => {
+  const onReceive = (data) => {
+    $scope.data = data;
+  };
+
+  const socketObj = new __WEBPACK_IMPORTED_MODULE_1__services_sockets__["a" /* default */](onReceive);
+
+  $scope.generateData = () => {
     socketObj.sendData();
-  }, 1000);
-  // const socket = new WebSocket('ws://localhost:3000');
-  // socket.addEventListener('open', function (event) {
-  //   console.log('WebSocket connected');
-  // });
-  // socket.addEventListener('message', function (event) {
-  //   console.log('Message from server ', event.data);
-  // });
+  };
 
-  // socket.addEventListener('close', function (event) {
-  //   console.log('WebSocket disconnected');
-  // });
-
-  // $scope.generateData = () => {
-  //   socket.send('oi');
-  // };
-
-  // $scope.closeWebSocketConnection = () => {
-  //   socket.close();
-  // }
 }]);
 
 /***/ }),
@@ -145,20 +133,19 @@ __WEBPACK_IMPORTED_MODULE_0__config_config__["app"].controller('homeController',
 
 "use strict";
 class Sockets { 
-  constructor() {
+  constructor(callback) {
     this.socket = new WebSocket('ws://localhost:3000');
     this.socket.addEventListener('open', function (event) {
       console.log('WebSocket connected');
     });
     this.socket.addEventListener('message', function (event) {
-      console.log('Message from server ', event.data);
+      callback(JSON.parse(event.data));
     });
     this.socket.addEventListener('close', function (event) {
       console.log('WebSocket disconnected');
     });
   }
   sendData(){
-    new Promise
     this.socket.send('oi');
   }
   closeWebSocketConnection(){
@@ -167,6 +154,111 @@ class Sockets {
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = Sockets;
 
+
+/***/ }),
+/* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__config_config__ = __webpack_require__(0);
+
+
+__WEBPACK_IMPORTED_MODULE_0__config_config__["app"].directive('chart', function () {
+  return {
+    replace: true,
+    restrict: 'E',
+    scope: {
+      data: '='
+    },
+    templateUrl: 'directives/chart/template.html',
+    link: function (scope, element, attrs) { 
+      const options = {
+        margin: {
+          top: 10,
+          right: 50,
+          bottom: 50,
+          left: 50
+        },
+        width: element[0].clientWidth,
+        height: element[0].clientHeight,
+      };
+
+      const svg = d3
+        .select(".chart")
+        .append("svg")
+        .attr('width', options.width)
+        .attr('height', options.height)
+        .style("background-color", 'white');
+
+      const loadScaleX = (data) => {
+        return d3.scale
+          .linear()
+          .range([options.margin.left, options.width - options.margin.right])
+          .domain([0,data.length -1]);
+      }
+
+      const loadScaleY = (data) => {
+        return d3.scale
+          .linear()
+          .range([options.height - options.margin.bottom, options.margin.top])
+          .domain([0,d3.max(data, (d) => {
+            return d.y;
+          })]); 
+      }
+
+      const createAxeY = (data, yScale) => {
+        const yAxis = d3.svg
+          .axis()
+          .scale(yScale)
+          .orient("left")
+          .ticks(data.length);
+
+        svg.append("g")
+          .attr("transform", "translate(" + (options.margin.left) + ","+0+")")
+          .attr("class","yaxis")
+          .call(yAxis);
+      }
+
+      const createAxeX = (data,xScale) => {
+        const xAxis = d3.svg.axis().scale(xScale);
+        svg.append("g")
+          .attr("transform", "translate(0," + (options.height - options.margin.bottom) + ")")
+          .attr("class","xaxis")
+          .call(xAxis);
+      }
+      
+      const drawLine = (data, xScale, yScale) => {
+        const lineGen = d3.svg.line()
+          .x(function(d, i) {
+            return xScale(i);
+          })
+          .y(function(d) {
+            return yScale(d.y);
+          })
+          .interpolate("linear");
+
+        svg.append('path')
+          .attr('d', lineGen(data))
+          .attr('class', 'linePath')
+          .attr('stroke', 'black')
+          .attr('stroke-width', 1)
+          .attr('fill', 'none');
+      }
+
+      scope.$watch('data', (newVal) => {
+        if (newVal) {
+          console.log(newVal);
+          const scaleX = loadScaleX(newVal);
+          const scaleY = loadScaleY(newVal);
+          createAxeX(newVal, scaleX);
+          createAxeY(newVal, scaleY);
+          drawLine(newVal, scaleX, scaleY);
+        }
+      });
+    }
+  }
+});
 
 /***/ })
 /******/ ]);
