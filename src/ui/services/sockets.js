@@ -12,7 +12,9 @@ export default class Sockets {
     });
   }
   sendData(){
-    this.socket.send('oi');
+    if (this.socket.readyState !== this.socket.CLOSED) {
+      this.socket.send('oi');
+    }
   }
   closeWebSocketConnection(){
     this.socket.close();

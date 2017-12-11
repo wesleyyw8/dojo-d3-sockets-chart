@@ -9,4 +9,11 @@ body {
 .chart {
   width: 400px;
   height: 400px;
+  background-color: white;
+}
+
+.chart .linePath {
+  fill: none;
+  stroke-width: 1;
+  stroke: black;
 }

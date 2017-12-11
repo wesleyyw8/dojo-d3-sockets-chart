@@ -20,29 +20,33 @@ let arr = [{
     "x":1,"y":6
   },{
     "x":7,"y":2
-  },{
-    "x":4,"y":9
-  },{
-    "x":3,"y":5
   }];
 
 wss.on('connection', function(ws) {
     //connection is up, let's add a simple simple event
+    ws._socket.setKeepAlive(true);
     ws.on('message', (message) => {
-      console.log('received: %s', message);
-      arr.push({
-        x: parseInt(Math.random()*10),
-        y: parseInt(Math.random()*10)
-      });
-     
-      ws.send(JSON.stringify(arr));
+      function yourFunction(){
+        arr.push({
+          x: parseInt(Math.random()*100),
+          y: parseInt(Math.random()*100)
+        });
+        try {
+          ws.send(JSON.stringify(arr));
+        } catch(err) {
+          console.log('Websocket error: %s', err);
+        }
+        if (arr.length == 50) {
+          arr = [];
+        }
+        setTimeout(yourFunction, 1000);
+      }
+      yourFunction();
     });
 
     ws.on('close', function () {
       console.log('stopping client interval');
     });
-    //send immediatly a feedback to the incoming connection    
-   //ws.send('Hi there, I am a WebSocket server');
 });
 
 //start our server

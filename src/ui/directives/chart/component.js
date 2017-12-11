@@ -11,7 +11,7 @@ app.directive('chart', function () {
     link: function (scope, element, attrs) { 
       const options = {
         margin: {
-          top: 10,
+          top: 50,
           right: 50,
           bottom: 50,
           left: 50
@@ -24,24 +24,23 @@ app.directive('chart', function () {
         .select(".chart")
         .append("svg")
         .attr('width', options.width)
-        .attr('height', options.height)
-        .style("background-color", 'white');
+        .attr('height', options.height);
 
-      const loadScaleX = (data) => {
+      const loadScaleX = data => {
         return d3.scale
           .linear()
           .range([options.margin.left, options.width - options.margin.right])
           .domain([0,data.length -1]);
-      }
+      };
 
-      const loadScaleY = (data) => {
+      const loadScaleY = data => {
         return d3.scale
           .linear()
           .range([options.height - options.margin.bottom, options.margin.top])
           .domain([0,d3.max(data, (d) => {
             return d.y;
           })]); 
-      }
+      };
 
       const createAxeY = (data, yScale) => {
         const yAxis = d3.svg
@@ -59,9 +58,9 @@ app.directive('chart', function () {
         else {
           svg.select(".yaxis").transition().duration(750).call(yAxis);
         }
-      }
+      };
 
-      const createAxeX = (data,xScale) => {
+      const createAxeX = (data, xScale) => {
         const xAxis = d3.svg.axis().scale(xScale);
 
         if (d3.select('.xaxis')[0][0] === null) {
@@ -72,7 +71,7 @@ app.directive('chart', function () {
         } else {
           svg.select(".xaxis").transition().duration(750).call(xAxis);
         }
-      }
+      };
       
       const drawLine = (data, xScale, yScale) => {
         const lineGen = d3.svg.line()
@@ -87,20 +86,17 @@ app.directive('chart', function () {
         if (d3.select('.linePath')[0][0] === null) {
           svg.append('path')
             .attr('d', lineGen(data))
-            .attr('class', 'linePath')
-            .attr('stroke', 'black')
-            .attr('stroke-width', 1)
-            .attr('fill', 'none');
+            .attr('class', 'linePath');
         }
         else {
           svg.select(".linePath")   // change the line
             .transition()
             .duration(750)
-            .attr("d", lineGen(data))
+            .attr("d", lineGen(data));
         }
-      }
+      };
 
-      scope.$watch('data', (newVal) => {
+      scope.$watch(() => scope.data, newVal => {
         if (newVal) {
           const scaleX = loadScaleX(newVal);
           const scaleY = loadScaleY(newVal);

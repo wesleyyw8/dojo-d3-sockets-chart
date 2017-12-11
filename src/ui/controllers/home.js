@@ -3,13 +3,25 @@ import Sockets from './../services/sockets';
 app.controller('homeController', ['$scope', '$timeout', function ($scope, $timeout) {
 
   const onReceive = (data) => {
-    $scope.data = data;
+    if ($scope.receivingData) {
+      $scope.data = data;
+      $timeout(() => {
+        $scope.$apply();
+      }, 0);
+    }
   };
 
-  const socketObj = new Sockets(onReceive);
+  let socketObj = new Sockets(onReceive);
 
   $scope.generateData = () => {
-    socketObj.sendData();
+    $scope.receivingData = true;
+    if (socketObj.socket.readyState !== socketObj.socket.CLOSED) {
+      socketObj.sendData();
+    }
   };
+
+  $scope.closeConnection = () => {
+    $scope.receivingData = false;
+  }
 
 }]);
