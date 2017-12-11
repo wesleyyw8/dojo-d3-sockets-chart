@@ -50,18 +50,28 @@ app.directive('chart', function () {
           .orient("left")
           .ticks(data.length);
 
-        svg.append("g")
-          .attr("transform", "translate(" + (options.margin.left) + ","+0+")")
-          .attr("class","yaxis")
-          .call(yAxis);
+        if (d3.select('.yaxis')[0][0] === null) {
+          svg.append("g")
+            .attr("transform", "translate(" + (options.margin.left) + ","+0+")")
+            .attr("class","yaxis")
+            .call(yAxis);
+        }
+        else {
+          svg.select(".yaxis").transition().duration(750).call(yAxis);
+        }
       }
 
       const createAxeX = (data,xScale) => {
         const xAxis = d3.svg.axis().scale(xScale);
-        svg.append("g")
-          .attr("transform", "translate(0," + (options.height - options.margin.bottom) + ")")
-          .attr("class","xaxis")
-          .call(xAxis);
+
+        if (d3.select('.xaxis')[0][0] === null) {
+          svg.append("g")
+            .attr("transform", "translate(0," + (options.height - options.margin.bottom) + ")")
+            .attr("class","xaxis")
+            .call(xAxis);
+        } else {
+          svg.select(".xaxis").transition().duration(750).call(xAxis);
+        }
       }
       
       const drawLine = (data, xScale, yScale) => {
@@ -74,17 +84,24 @@ app.directive('chart', function () {
           })
           .interpolate("linear");
 
-        svg.append('path')
-          .attr('d', lineGen(data))
-          .attr('class', 'linePath')
-          .attr('stroke', 'black')
-          .attr('stroke-width', 1)
-          .attr('fill', 'none');
+        if (d3.select('.linePath')[0][0] === null) {
+          svg.append('path')
+            .attr('d', lineGen(data))
+            .attr('class', 'linePath')
+            .attr('stroke', 'black')
+            .attr('stroke-width', 1)
+            .attr('fill', 'none');
+        }
+        else {
+          svg.select(".linePath")   // change the line
+            .transition()
+            .duration(750)
+            .attr("d", lineGen(data))
+        }
       }
 
       scope.$watch('data', (newVal) => {
         if (newVal) {
-          console.log(newVal);
           const scaleX = loadScaleX(newVal);
           const scaleY = loadScaleY(newVal);
           createAxeX(newVal, scaleX);
