@@ -19,7 +19,7 @@ let arr = [{
   },{
     "x":1,"y":6
   },{
-    "x":7,"y":2
+    "x":2,"y":2
   }];
 
 wss.on('connection', function(ws) {
@@ -28,7 +28,7 @@ wss.on('connection', function(ws) {
     ws.on('message', (message) => {
       function yourFunction(){
         arr.push({
-          x: parseInt(Math.random()*100),
+          x: (arr.length),
           y: parseInt(Math.random()*100)
         });
         try {
@@ -36,7 +36,7 @@ wss.on('connection', function(ws) {
         } catch(err) {
           console.log('Websocket error: %s', err);
         }
-        if (arr.length == 50) {
+        if (arr.length == 30) {
           arr = [];
         }
         setTimeout(yourFunction, 1000);

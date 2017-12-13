@@ -21,8 +21,8 @@ app.directive('chart', function () {
       };
 
       const svg = d3
-        .select(".chart")
-        .append("svg")
+        .select('.chart')
+        .append('svg')
         .attr('width', options.width)
         .attr('height', options.height);
 
@@ -30,14 +30,16 @@ app.directive('chart', function () {
         return d3.scale
           .linear()
           .range([options.margin.left, options.width - options.margin.right])
-          .domain([0,data.length -1]);
+          .domain([0, d3.max(data, d => {
+            return d.x
+          })]);
       };
 
       const loadScaleY = data => {
         return d3.scale
           .linear()
           .range([options.height - options.margin.bottom, options.margin.top])
-          .domain([0,d3.max(data, (d) => {
+          .domain([0,d3.max(data, d => {
             return d.y;
           })]); 
       };
@@ -46,30 +48,37 @@ app.directive('chart', function () {
         const yAxis = d3.svg
           .axis()
           .scale(yScale)
-          .orient("left")
-          .ticks(data.length);
+          .orient('left')
 
         if (d3.select('.yaxis')[0][0] === null) {
-          svg.append("g")
-            .attr("transform", "translate(" + (options.margin.left) + ","+0+")")
-            .attr("class","yaxis")
+          svg.append('g')
+            .attr('transform', `translate(${options.margin.left},0)`)
+            .attr('class','yaxis')
             .call(yAxis);
         }
         else {
-          svg.select(".yaxis").transition().duration(750).call(yAxis);
+          svg.select('.yaxis')
+            .transition()
+            .duration(750)
+            .call(yAxis);
         }
       };
 
       const createAxeX = (data, xScale) => {
-        const xAxis = d3.svg.axis().scale(xScale);
+        const xAxis = d3.svg
+          .axis()
+          .scale(xScale);
 
         if (d3.select('.xaxis')[0][0] === null) {
-          svg.append("g")
-            .attr("transform", "translate(0," + (options.height - options.margin.bottom) + ")")
-            .attr("class","xaxis")
+          svg.append('g')
+            .attr('transform', `translate(0, ${ options.height - options.margin.bottom })`)
+            .attr('class','xaxis')
             .call(xAxis);
         } else {
-          svg.select(".xaxis").transition().duration(750).call(xAxis);
+          svg.select('.xaxis')
+            .transition()
+            .duration(750)
+            .call(xAxis);
         }
       };
       
@@ -81,7 +90,7 @@ app.directive('chart', function () {
           .y(function(d) {
             return yScale(d.y);
           })
-          .interpolate("linear");
+          .interpolate('linear'); //cardinal-closed. cardinal
 
         if (d3.select('.linePath')[0][0] === null) {
           svg.append('path')
@@ -89,10 +98,10 @@ app.directive('chart', function () {
             .attr('class', 'linePath');
         }
         else {
-          svg.select(".linePath")   // change the line
+          svg.select('.linePath') 
             .transition()
             .duration(750)
-            .attr("d", lineGen(data));
+            .attr('d', lineGen(data));
         }
       };
 
@@ -100,6 +109,7 @@ app.directive('chart', function () {
         if (newVal) {
           const scaleX = loadScaleX(newVal);
           const scaleY = loadScaleY(newVal);
+
           createAxeX(newVal, scaleX);
           createAxeY(newVal, scaleY);
           drawLine(newVal, scaleX, scaleY);
