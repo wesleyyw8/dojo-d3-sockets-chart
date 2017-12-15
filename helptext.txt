@@ -1,0 +1,5 @@
+exercise 1: create scaleX
+exercise 2: create axeX
+exercise 2.1: create transition on axeX when it is already created
+exercise 3: create transition for the chart line
+exercise 4: play with the css

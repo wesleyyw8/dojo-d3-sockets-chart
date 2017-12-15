@@ -1,6 +1,6 @@
 import { app } from './../../config/config';
 
-app.directive('chart', function () {
+app.directive('chart', () => {
   return {
     replace: true,
     restrict: 'E',
@@ -8,7 +8,7 @@ app.directive('chart', function () {
       data: '='
     },
     templateUrl: 'directives/chart/template.html',
-    link: function (scope, element, attrs) { 
+    link: (scope, element, attrs) => { 
       const options = {
         margin: {
           top: 50,
@@ -30,18 +30,18 @@ app.directive('chart', function () {
         return d3.scale
           .linear()
           .range([options.margin.left, options.width - options.margin.right])
-          .domain([0, d3.max(data, d => {
-            return d.x
-          })]);
+          .domain([0, d3.max(data, d => 
+            d.x
+          )]);
       };
 
       const loadScaleY = data => {
         return d3.scale
           .linear()
           .range([options.height - options.margin.bottom, options.margin.top])
-          .domain([0,d3.max(data, d => {
-            return d.y;
-          })]); 
+          .domain([0,d3.max(data, d => 
+            d.y
+          )]); 
       };
 
       const createAxeY = (data, yScale) => {
@@ -84,12 +84,12 @@ app.directive('chart', function () {
       
       const drawLine = (data, xScale, yScale) => {
         const lineGen = d3.svg.line()
-          .x(function(d, i) {
-            return xScale(i);
-          })
-          .y(function(d) {
-            return yScale(d.y);
-          })
+          .x((d, i) => 
+            xScale(d.x)
+          )
+          .y((d) =>
+            yScale(d.y)
+          )
           .interpolate('linear'); //cardinal-closed. cardinal
 
         if (d3.select('.linePath')[0][0] === null) {
@@ -108,10 +108,10 @@ app.directive('chart', function () {
       scope.$watch(() => scope.data, newVal => {
         if (newVal) {
           const scaleX = loadScaleX(newVal);
-          const scaleY = loadScaleY(newVal);
+          const scaleY = loadScaleY(newVal); //i do this
 
           createAxeX(newVal, scaleX);
-          createAxeY(newVal, scaleY);
+          createAxeY(newVal, scaleY); //i do this
           drawLine(newVal, scaleX, scaleY);
         }
       });

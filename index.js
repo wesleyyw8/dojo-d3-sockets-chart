@@ -15,18 +15,18 @@ app.use('/build', express.static(__dirname + '/build'));
 app.use('/scripts', express.static(__dirname + '/node_modules'));
 
 let arr = [{
-    "x":0,"y":9
+    'x':0,'y':9
   },{
-    "x":1,"y":6
+    'x':1,'y':6
   },{
-    "x":2,"y":2
+    'x':2,'y':2
   }];
 
 wss.on('connection', function(ws) {
     //connection is up, let's add a simple simple event
     ws._socket.setKeepAlive(true);
     ws.on('message', (message) => {
-      function yourFunction(){
+      function generateValues(){
         arr.push({
           x: (arr.length),
           y: parseInt(Math.random()*100)
@@ -39,9 +39,9 @@ wss.on('connection', function(ws) {
         if (arr.length == 30) {
           arr = [];
         }
-        setTimeout(yourFunction, 1000);
+        setTimeout(generateValues, 1000);
       }
-      yourFunction();
+      generateValues();
     });
 
     ws.on('close', function () {
