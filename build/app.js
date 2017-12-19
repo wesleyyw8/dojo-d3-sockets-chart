@@ -135,7 +135,7 @@ __WEBPACK_IMPORTED_MODULE_0__config_config__["app"].controller('homeController',
 
   $scope.closeConnection = () => {
     $scope.receivingData = false;
-  }
+  };
 
 }]);
 
@@ -226,7 +226,7 @@ __WEBPACK_IMPORTED_MODULE_0__config_config__["app"].directive('chart', () => {
         const yAxis = d3.svg
           .axis()
           .scale(yScale)
-          .orient('left')
+          .orient('left');
 
         if (d3.select('.yaxis')[0][0] === null) {
           svg.append('g')
@@ -294,7 +294,7 @@ __WEBPACK_IMPORTED_MODULE_0__config_config__["app"].directive('chart', () => {
         }
       });
     }
-  }
+  };
 });
 
 /***/ })

@@ -22,6 +22,6 @@ app.controller('homeController', ['$scope', '$timeout', function ($scope, $timeo
 
   $scope.closeConnection = () => {
     $scope.receivingData = false;
-  }
+  };
 
 }]);

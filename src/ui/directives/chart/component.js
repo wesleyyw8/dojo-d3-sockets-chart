@@ -48,7 +48,7 @@ app.directive('chart', () => {
         const yAxis = d3.svg
           .axis()
           .scale(yScale)
-          .orient('left')
+          .orient('left');
 
         if (d3.select('.yaxis')[0][0] === null) {
           svg.append('g')
@@ -116,5 +116,5 @@ app.directive('chart', () => {
         }
       });
     }
-  }
+  };
 });
