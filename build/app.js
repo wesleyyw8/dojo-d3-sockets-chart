@@ -262,7 +262,7 @@ __WEBPACK_IMPORTED_MODULE_0__config_config__["app"].directive('chart', () => {
       
       const drawLine = (data, xScale, yScale) => {
         const lineGen = d3.svg.line()
-          .x((d, i) => 
+          .x((d) => 
             xScale(d.x)
           )
           .y((d) =>
@@ -285,12 +285,12 @@ __WEBPACK_IMPORTED_MODULE_0__config_config__["app"].directive('chart', () => {
 
       scope.$watch(() => scope.data, newVal => {
         if (newVal) {
+          const scaleY = loadScaleY(newVal); //ill do this
           const scaleX = loadScaleX(newVal);
-          const scaleY = loadScaleY(newVal); //i do this
 
+          createAxeY(newVal, scaleY); //ill do this
           createAxeX(newVal, scaleX);
-          createAxeY(newVal, scaleY); //i do this
-          drawLine(newVal, scaleX, scaleY);
+          drawLine(newVal, scaleX, scaleY); // most  of it
         }
       });
     }
